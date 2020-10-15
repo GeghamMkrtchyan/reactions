@@ -26,14 +26,15 @@ namespace GhostNetwork.Reactions.Api
             });
 
             services.AddDbContext<MssqlContext>(options => options
-                .UseSqlServer(Configuration["MSSQL_CONNECTION"], b => b.MigrationsAssembly("GhostNetwork.Reactions.Mssql")));
+                .UseSqlServer($"Server=localhost,1433;Database=Reaction;User=SA;Password=Super123Password", b =>
+                b.MigrationsAssembly("GhostNetwork.Reactions.Mssql")));
 
             services.AddScoped<IReactionStorage, MssqlReactionStorage>();
 
             services.AddControllers();
         }
 
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, MssqlContext context)
         {
             if (env.IsDevelopment())
             {
@@ -43,6 +44,8 @@ namespace GhostNetwork.Reactions.Api
                        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Relations.API V1");
                    });
             }
+
+            context.Database.Migrate();
 
             app.UseRouting();
 
