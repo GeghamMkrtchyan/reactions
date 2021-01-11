@@ -29,3 +29,9 @@ class Api:
     headers = {'Content-Type': 'application/json', 'Author': author }
 
     return requests.delete(url, headers = headers)
+
+  def delete_all_reactions(self, key):
+    url = 'http://localhost:5000/reactions/' + key
+    headers = {'Content-Type': 'application/json'}
+
+    return requests.delete(url, headers = headers)
