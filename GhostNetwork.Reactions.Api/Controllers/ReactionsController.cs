@@ -35,6 +35,7 @@ namespace GhostNetwork.Reactions.Api.Controllers
             {
                 return NotFound();
             }
+
             return Ok(reaction);
         }
 
@@ -114,6 +115,11 @@ namespace GhostNetwork.Reactions.Api.Controllers
         [HttpDelete("{key}")]
         public async Task<ActionResult<IDictionary<string, int>>> DeleteAsync([FromRoute] string key)
         {
+            if (!(await reactionStorage.GetStats(key)).Any())
+            {
+                return NotFound();
+            }
+
             await reactionStorage.DeleteAsync(key);
 
             return Ok(await reactionStorage.GetStats(key));
