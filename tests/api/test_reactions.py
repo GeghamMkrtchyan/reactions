@@ -19,28 +19,28 @@ class TestReactions(Api):
 
         self.post_reaction(reaction)
 
-        resp = self.put_reaction({'key': 'Post_Test', 'author': 'Test_Author', 'type': 'wow'})
+        resp = self.post_reaction({'key': 'Post_Test', 'author': 'Test_Author', 'type': 'wow'})
         resp_body = resp.json()
 
-        assert resp.status_code == 200
+        assert resp.status_code == 201
         assert resp_body['wow'] > 0
 
-    def test_delete_reaction(self):
+    def test_delete_by_author_reaction(self):
         reaction_key = 'Post_Test'
         reaction_author = 'Test_Author'
 
         self.post_reaction({'key': reaction_key, 'author': reaction_author, 'type': 'like'})
 
-        delete_resp = self.delete_reaction(reaction_key, reaction_author)
+        delete_resp = self.delete_reaction_by_author(reaction_key, reaction_author)
         delete_resp_body = delete_resp.json()
 
         assert delete_resp_body == {}
 
-    def test_delete_nonexistent_reaction(self):
+    def test_delete_by_author_nonexistent_reaction(self):
         reaction_key = 'nonexistent-id'
         reaction_author = 'Test_Author'
 
-        resp = self.delete_reaction(reaction_key, reaction_author)
+        resp = self.delete_reaction_by_author(reaction_key, reaction_author)
 
         assert resp.status_code == 404
 
