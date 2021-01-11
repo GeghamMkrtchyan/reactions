@@ -54,3 +54,25 @@ class TestReactions(Api):
         second_resp = self.post_reaction(reaction).json()
 
         assert 'like' in first_resp and 'wow' in second_resp
+
+    def test_delete_all_reactions(self):
+        reaction_key = 'Post_Test'
+
+        like_reaction = {'key': reaction_key, 'author': 'Test_Author1', 'type': 'like'}
+        wow_reaction = {'key': reaction_key, 'author': 'Test_Author2', 'type': 'wow'}
+
+        self.post_reaction(like_reaction)
+        self.post_reaction(wow_reaction)
+
+        response = self.delete_all_reactions(reaction_key)
+        stats = response.json()
+
+        assert response.status_code == 200 and stats == {}
+
+    def test_delete_all_nonexistent_reaction(self):
+        reaction_key = 'nonexistent-id'
+        reaction_author = 'Test_Author'
+
+        resp = self.delete_all_reactions(reaction_key)
+
+        assert resp.status_code == 404
